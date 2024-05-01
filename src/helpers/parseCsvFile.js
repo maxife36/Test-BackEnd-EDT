@@ -5,21 +5,24 @@ const parseCsv = (filePath) => {
         const data = fs.readFileSync(filePath, 'utf-8').split('\n')
 
         const columnsName = data.shift().split(',')
+        const parseData = []
 
-        const dataObj = data.map(row => {
+        data.forEach(row => {
 
-            const rowObj = {}
+            if (row) {
+                const rowObj = {}
 
-            const rowInfo = row.split(',')
+                const rowInfo = row.match(/(?:[^,"]+|"(?:[^"]*)")+/g)
 
-            rowInfo.forEach((data, index)=>{
-                rowObj[columnsName[index]] = data
-            })
+                rowInfo.forEach((data, index) => {
+                    rowObj[columnsName[index]] = data.replace(/^"|"$/g, '')
+                })
 
-            return rowObj
+                parseData.push(rowObj) 
+            }
         })
 
-        return dataObj
+        return parseData
     } catch (error) {
         console.log(error.message);
     }
