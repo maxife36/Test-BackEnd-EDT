@@ -75,8 +75,6 @@ module.exports = class DbResturants {
     
             /* Validacion */
 
-            if (!id) throw new HttpError(400, 'Debe proporcionar un id')
-
             const resultValidation = Validator.dataValidation(data)
             if(resultValidation !== true) throw new HttpError(400, resultValidation)
         
