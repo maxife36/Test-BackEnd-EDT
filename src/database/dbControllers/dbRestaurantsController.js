@@ -123,6 +123,7 @@ module.exports = class DbResturants {
                   ) <= ?;
                 `;
 
+    
             const [results] = await sequelize.query(query, {
                 replacements: [
                     parseFloat(longitude),

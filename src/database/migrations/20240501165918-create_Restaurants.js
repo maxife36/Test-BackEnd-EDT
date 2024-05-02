@@ -7,7 +7,7 @@ module.exports = {
       id: {
         type: Sequelize.STRING,
         primaryKey: true,
-        allowNull: false,
+        allowNull: false
       },
       rating: {
         type: Sequelize.INTEGER,
@@ -65,6 +65,11 @@ module.exports = {
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"),
       }
     })
+
+    await queryInterface.addIndex('Restaurants', {
+      fields: [{ name: 'id', length: 36 }], // Especifica el prefijo de longitud
+      unique: true,
+    });
 
   },
 

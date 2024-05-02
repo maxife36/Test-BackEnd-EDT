@@ -22,7 +22,7 @@ module.exports = {
         if (city && typeof city !== 'string') return 'El city debe ser del tipo String'
         if (state && typeof state !== 'string') return 'El state debe ser del tipo String'
         if (lat && typeof lat !== 'number' || Number.isInteger(lat)) return 'lat debe ser del tipo Float'
-        if (lat && lat <= -180.00 || lat >= 180.00) return 'lat debe estar entre -180.00 y 180.00'
+        if (lat && lat <= -90.00 || lat >= 90.00) return 'lat debe estar entre -90.00 y 90.00'
         if (lng && typeof lng !== 'number' || Number.isInteger(lng)) return 'lng debe ser del tipo Float'
         if (lng && lng <= -180.00 || lng >= 180.00) return 'lng debe estar entre -180.00 y 180.00'
 

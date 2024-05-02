@@ -145,7 +145,6 @@ const controllers = {
 
             if (!latitude || !longitude || !radius) throw new HttpError(400, 'Se requiere Latitude, longitude y radius')
 
-
             const result = await DbResturants.statisticsRestaurants(latitude, longitude, radius)
 
             res.json({
@@ -157,7 +156,8 @@ const controllers = {
             if (error instanceof HttpError) {
                 res.status(error.status).json({ message: error.message });
             } else {
-                res.status(500).json({ message: 'Internal Server Error' });
+                res.status(500).json({ message: 'Internal Server Error',
+            error: error.message });
             }
         }
     },

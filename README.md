@@ -129,8 +129,8 @@ Este endpoint modifica los campos que se le indiquen a un Restaurante existente.
     "street": "fake street 123",
     "city": "Springfield",
     "state": "Fake State",
-    "lat": 99.5169213,
-    "lng": -18.251542
+    "lat": 68.235632165, 
+    "lng": -89.235413215 
 }
 ```
 
