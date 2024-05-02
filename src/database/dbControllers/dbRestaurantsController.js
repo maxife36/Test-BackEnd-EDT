@@ -1,4 +1,4 @@
-const { Restaurant } = require('../models');
+const { Restaurant, sequelize } = require('../models');
 const HttpError = require('../../errors/httpErrors')
 const { v4: uuid } = require('uuid')
 const Validator = require('../../validators/restaurantValidations');
@@ -43,24 +43,24 @@ module.exports = class DbResturants {
         }
     }
     static async createRestaurant(data) {
-        try {      
+        try {
             const { rating, name, site, email, phone, street, city, state, lat, lng } = data
-    
+
             /* Validacion */
             const resultValidation = Validator.dataValidation(data)
-            if(resultValidation !== true) throw new HttpError(400, resultValidation)
-        
+            if (resultValidation !== true) throw new HttpError(400, resultValidation)
+
             const newRestaurant = {
                 id: uuid(),
-                rating, 
-                name, 
-                site, 
-                email, 
-                phone, 
-                street, 
-                city, 
-                state, 
-                lat, 
+                rating,
+                name,
+                site,
+                email,
+                phone,
+                street,
+                city,
+                state,
+                lat,
                 lng
             }
 
@@ -70,42 +70,73 @@ module.exports = class DbResturants {
         }
     }
     static async updateRestaurant(data) {
-        try {      
-            const {id, rating, name, site, email, phone, street, city, state, lat, lng } = data
-    
+        try {
+            const { id, rating, name, site, email, phone, street, city, state, lat, lng } = data
+
             /* Validacion */
 
             const resultValidation = Validator.dataValidation(data)
-            if(resultValidation !== true) throw new HttpError(400, resultValidation)
-        
+            if (resultValidation !== true) throw new HttpError(400, resultValidation)
+
             const updatedRestaurant = {
-                rating, 
-                name, 
-                site, 
-                email, 
-                phone, 
-                street, 
-                city, 
-                state, 
-                lat, 
+                rating,
+                name,
+                site,
+                email,
+                phone,
+                street,
+                city,
+                state,
+                lat,
                 lng
             }
 
-            return await Restaurant.update(updatedRestaurant,{
-                where:{id}
+            return await Restaurant.update(updatedRestaurant, {
+                where: { id }
             })
         } catch (error) {
             throw error
         }
     }
     static async deleteRestaurant(id) {
-        try {      
+        try {
             return await Restaurant.destroy({
-                where:{id}
+                where: { id }
             })
         } catch (error) {
             throw error
         }
     }
+    static async statisticsRestaurants(latitude, longitude, radius) {
+        try {
+            const query = `
+                SELECT
+                  COUNT(*) AS count,
+                  AVG(rating) AS avg,
+                  STD(rating) AS std
+                FROM
+                  restaurants
+                WHERE
+                  ST_Distance_Sphere(
+                    POINT(lng, lat),
+                    POINT(?, ?)
+                  ) <= ?;
+                `;
+
+            const [results] = await sequelize.query(query, {
+                replacements: [
+                    parseFloat(longitude),
+                    parseFloat(latitude),
+                    parseFloat(radius),
+                ],
+            });
+
+            return results
+
+        } catch (error) {
+            throw error
+        }
+    }
+
 
 }

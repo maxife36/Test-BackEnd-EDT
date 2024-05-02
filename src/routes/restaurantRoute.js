@@ -4,6 +4,7 @@ const router = express.Router()
 const { restaurantControllers: controllers } = require("../controllers")
 
 router.get('/', controllers.getAllRestaurants)
+router.get('/statistics', controllers.statisticsRestaurants)
 router.get('/:id', controllers.getRestaurantById)
 
 router.post('/', controllers.createRestaurant)

@@ -19,7 +19,11 @@ const controllers = {
             })
 
         } catch (error) {
-            console.log(error.message);
+            if (error instanceof HttpError) {
+                res.status(error.status).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'Internal Server Error' });
+            }
         }
     },
     getRestaurantById: async function (req, res) {
@@ -36,24 +40,28 @@ const controllers = {
             })
 
         } catch (error) {
-            console.log(error.message);
+            if (error instanceof HttpError) {
+                res.status(error.status).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'Internal Server Error' });
+            }
         }
     },
     createRestaurant: async function (req, res) {
         try {
             const { rating, name, site, email, phone, street, city, state, lat, lng } = req.body
 
-            const data = { 
-                rating: Number(rating)? Number(rating) : null , 
-                name: name? String(name) : null, 
-                site: site? String(site) : null, 
-                email: email? String(email) : null, 
-                phone: phone? String(phone) : null, 
-                street: street? String(street) : null, 
-                city: city? String(city) : null, 
-                state: state? String(state) : null, 
-                lat: Number(lat)? Number(lat) : null , 
-                lng: Number(lng)? Number(lng) : null  
+            const data = {
+                rating: Number(rating) ? Number(rating) : null,
+                name: name ? String(name) : null,
+                site: site ? String(site) : null,
+                email: email ? String(email) : null,
+                phone: phone ? String(phone) : null,
+                street: street ? String(street) : null,
+                city: city ? String(city) : null,
+                state: state ? String(state) : null,
+                lat: Number(lat) ? Number(lat) : null,
+                lng: Number(lng) ? Number(lng) : null
             }
 
             const restaurant = await DbResturants.createRestaurant(data)
@@ -64,27 +72,31 @@ const controllers = {
             })
 
         } catch (error) {
-            console.log(error.message);
+            if (error instanceof HttpError) {
+                res.status(error.status).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'Internal Server Error' });
+            }
         }
     },
     updateRestaurant: async function (req, res) {
         try {
-            const {id, rating, name, site, email, phone, street, city, state, lat, lng } = req.body
+            const { id, rating, name, site, email, phone, street, city, state, lat, lng } = req.body
 
             if (!id) throw new HttpError(400, 'Debe proporcionar un id en el body')
 
-            const data = { 
+            const data = {
                 id: String(id),
-                rating: Number(rating)? Number(rating) : 0 , 
-                name: name? String(name) : null, 
-                site: site? String(site) : null, 
-                email: email? String(email) : null, 
-                phone: phone? String(phone) : null, 
-                street: street? String(street) : null, 
-                city: city? String(city) : null, 
-                state: state? String(state) : null, 
-                lat: Number(lat) && Number(lat) === 0? Number(lat) : null , 
-                lng: Number(lng) && Number(lng) === 0? Number(lng) : null  
+                rating: Number(rating) ? Number(rating) : 0,
+                name: name ? String(name) : null,
+                site: site ? String(site) : null,
+                email: email ? String(email) : null,
+                phone: phone ? String(phone) : null,
+                street: street ? String(street) : null,
+                city: city ? String(city) : null,
+                state: state ? String(state) : null,
+                lat: Number(lat) && Number(lat) === 0 ? Number(lat) : null,
+                lng: Number(lng) && Number(lng) === 0 ? Number(lng) : null
             }
 
             const isUpdated = await DbResturants.updateRestaurant(data)
@@ -100,13 +112,17 @@ const controllers = {
             })
 
         } catch (error) {
-            console.log(error.message);
+            if (error instanceof HttpError) {
+                res.status(error.status).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'Internal Server Error' });
+            }
         }
     },
     deleteRestaurant: async function (req, res) {
         try {
             const { id } = req.params
-            
+
 
             const deleteRestaurant = await DbResturants.deleteRestaurant(id)
 
@@ -117,7 +133,33 @@ const controllers = {
             })
 
         } catch (error) {
-            console.log(error.message);
+            if (error instanceof HttpError) {
+                res.status(error.status).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'Internal Server Error' });
+            }
+        }
+    },
+    statisticsRestaurants: async function (req, res) {
+        try {
+            const { latitude, longitude, radius } = req.query;
+
+            if (!latitude || !longitude || !radius) throw new HttpError(400, 'Se requiere Latitude, longitude y radius')
+
+
+            const result = await DbResturants.statisticsRestaurants(latitude, longitude, radius)
+
+            res.json({
+                status: 200,
+                data: result
+            })
+
+        } catch (error) {
+            if (error instanceof HttpError) {
+                res.status(error.status).json({ message: error.message });
+            } else {
+                res.status(500).json({ message: 'Internal Server Error' });
+            }
         }
     },
 
