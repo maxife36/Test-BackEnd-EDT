@@ -86,18 +86,19 @@ const controllers = {
             if (!id) throw new HttpError(400, 'Debe proporcionar un id en el body')
 
             const data = {
-                id: String(id),
-                rating: Number(rating) ? Number(rating) : 0,
-                name: name ? String(name) : null,
-                site: site ? String(site) : null,
-                email: email ? String(email) : null,
-                phone: phone ? String(phone) : null,
-                street: street ? String(street) : null,
-                city: city ? String(city) : null,
-                state: state ? String(state) : null,
-                lat: Number(lat) && Number(lat) === 0 ? Number(lat) : null,
-                lng: Number(lng) && Number(lng) === 0 ? Number(lng) : null
+                id: String(id)
             }
+
+            Number(rating) ? data.rating = Number(rating) : 0
+            name ? data.name = String(name) : ""
+            site ? data.site = String(site) : ""
+            email ? data.email = String(email) : ""
+            phone ? data.phone = String(phone) : ""
+            street ? data.street = String(street) : ""
+            city ? data.city = String(city) : ""
+            state ? data.state = String(state) : ""
+            Number(lat) ? data.lat = Number(lat) : ""
+            Number(lng) ? data.lng = Number(lng) : ""
 
             const isUpdated = await DbResturants.updateRestaurant(data)
 
@@ -123,9 +124,7 @@ const controllers = {
         try {
             const { id } = req.params
 
-
             const deleteRestaurant = await DbResturants.deleteRestaurant(id)
-
 
             res.json({
                 status: 200,
