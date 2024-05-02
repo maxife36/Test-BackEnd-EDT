@@ -115,7 +115,7 @@ module.exports = class DbResturants {
                   AVG(rating) AS avg,
                   STD(rating) AS std
                 FROM
-                  restaurants
+                  Restaurants
                 WHERE
                   ST_Distance_Sphere(
                     POINT(lng, lat),
@@ -123,7 +123,7 @@ module.exports = class DbResturants {
                   ) <= ?;
                 `;
 
-    
+
             const [results] = await sequelize.query(query, {
                 replacements: [
                     parseFloat(longitude),
